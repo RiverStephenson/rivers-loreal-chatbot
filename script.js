@@ -6,6 +6,8 @@ const chatWindow = document.getElementById("chatWindow");
 // Set initial message
 chatWindow.innerHTML = '<div class="msg ai">👋 Hello! How can I help you today?</div>';
 
+const workerUrl = 'https://lorealworker.riverstephenson.workers.dev';
+
 /* Handle form submit */
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -20,19 +22,18 @@ chatForm.addEventListener("submit", async (e) => {
   userInput.value = '';
 
   try {
-    // Send request to OpenAI
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Send request to Cloudflare Worker
+    const response = await fetch(workerUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${secretKey}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful L\'Oréal product advisor. Help users with product recommendations, beauty routines, and skincare advice.'
+            content: 'You are a L\'Oréal Smart Product Advisor. You ONLY answer questions related to L\'Oréal brands, products, skincare, makeup, haircare, beauty routines, and product recommendations. If someone asks about anything unrelated to L\'Oréal or beauty/cosmetics (like other brands, general topics, personal life, etc.), politely redirect them by saying "I\'m here to help with L\'Oréal products and beauty advice. How can I assist you with skincare, makeup, or haircare today?" Keep responses helpful, friendly, and focused exclusively on L\'Oréal and beauty topics.'
           },
           {
             role: 'user',
